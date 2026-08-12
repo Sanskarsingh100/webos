@@ -1,58 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>potato OS</title>
-  </head>
-  <body style="margin: 0; padding: 0; font-family: Helvetica, Arial, sans-serif; background-image: url('resource/saitama-ok-one-2560x1440-20909.jpg'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh;">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background-color: rgba(0, 0, 0, 0.35); color: #ffffff;">
-      <p style="margin: 0; font-weight: 700; letter-spacing: 0.02em;">potato os</p>
-      <p id="dateTime" style="margin: 0; font-size: 0.95rem;">Loading date…</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaf OS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="boot-overlay" id="bootOverlay">
+    <div class="boot-content">
+      <h1 class="boot-title">Leaf OS</h1>
+      <div class="boot-spinner"></div>
+      <p class="boot-text" id="bootText">Initializing system...</p>
     </div>
+  </div>
+
+  <div class="desktop" id="desktop">
+    <div class="wallpaper" id="wallpaper"></div>
     
-    <main style="max-width: 760px; margin: 40px auto; padding: 32px; border-radius: 24px; background: rgba(255, 253, 248, 0.96); border: 2px solid #d1d5db; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);">
-      <h1 style="margin: 4px 0 8px; font-size: 2.2rem;">Welcome to my potato OS</h1>
-      <h2 style="margin: 0 0 12px; color: #6d28d9;">A cozy corner of code, creativity, and curiosity</h2>
+    <header class="topbar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search apps..." />
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon" id="wallpaperBtn" title="Change Wallpaper">🎨</button>
+        <span class="time" id="topTime">--:--</span>
+      </div>
+    </header>
 
-      <p style="line-height: 1.7; margin: 0 0 16px;">
-        Hi! I’m Sanskar Singh and I am a student right now.
-      </p>
+    <main class="windows-container" id="windowsContainer"></main>
 
-      <img
-        src="resource/d4a144bfbbb952a5586043bde1cda8e9.jpg"
-        alt="A friendly portrait"
-        style="width: 220px; height: 220px; object-fit: cover; border-radius: 50%; border: 4px solid #6d28d9; margin: 16px 0 8px; display: block;"
-      />
+    <footer class="dock">
+      <div class="dock-content">
+        <button class="dock-icon" data-app="welcome" title="Welcome">✦</button>
+        <button class="dock-icon" data-app="clock" title="Clock">⏰</button>
+        <button class="dock-icon" data-app="calendar" title="Calendar">📅</button>
+        <button class="dock-icon" data-app="notes" title="Notes">📝</button>
+        <div class="dock-separator"></div>
+        <button class="dock-icon" data-app="settings" title="Settings">⚙️</button>
+      </div>
+    </footer>
+  </div>
 
-      <p style="margin-top: 8px;">Not a real selfie but a symbol of the vibe I’m going for.</p>
+  <div id="wallpaperModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Select Wallpaper</h2>
+      <div class="wallpaper-grid" id="wallpaperGrid"></div>
+      <button class="modal-close" id="modalClose">Close</button>
+    </div>
+  </div>
 
-      <p>Try one of these links:</p>
-      <p style="margin: 0; display: flex; flex-wrap: wrap; gap: 12px;">
-        <a href="https://github.com/Sanskarsingh100" style="display: inline-block; padding: 10px 16px; background: #111827; color: #ffffff; border-radius: 999px; text-decoration: none;">GitHub</a>
-        <a href="https://www.youtube.com/@NetworkChuckgitpush" style="display: inline-block; padding: 10px 16px; background: #2563eb; color: #ffffff; border-radius: 999px; text-decoration: none;">Favorite Creator</a>
-      </p>
-    </main>
-
-    <script>
-      function updateDateTime() {
-        const now = new Date();
-        const date = now.toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        });
-        const time = now.toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        });
-        document.getElementById('dateTime').textContent = `${date} ${time}`;
-      }
-
-      updateDateTime();
-      setInterval(updateDateTime, 1000);
-    </script>
-  </body>
+  <script src="script.js"></script>
+</body>
 </html>
