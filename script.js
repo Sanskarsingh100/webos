@@ -13,58 +13,28 @@ class LeafOS {
 
     this.wallpapers = [
       {
-        name: 'Sakura Path',
+        name: 'Leaf Green',
         type: 'still',
-        url: 'assets/wallpapers/still-anime-sakura.html',
-        preview: 'linear-gradient(180deg, #8ec5ff 0%, #f7d6e8 70%, #e8b7c8 100%)',
+        url: 'assets/wallpapers/leaf-green.html',
+        preview: 'linear-gradient(180deg, #0a2f1d 0%, #103c2d 35%, #071a14 100%)',
       },
       {
-        name: 'Rooftop Night',
+        name: 'Deep Forest',
         type: 'still',
-        url: 'assets/wallpapers/still-anime-rooftop.html',
-        preview: 'linear-gradient(180deg, #0b1020 0%, #152038 55%, #0b1018 100%)',
+        url: 'assets/wallpapers/deep-forest.html',
+        preview: 'linear-gradient(180deg, #07130d 0%, #0d261b 35%, #040d09 100%)',
       },
       {
-        name: 'Lake Dusk',
+        name: 'Neon Blue',
         type: 'still',
-        url: 'assets/wallpapers/still-anime-lake.html',
-        preview: 'linear-gradient(180deg, #3a4d7a 0%, #c97b5a 50%, #4a6d7a 100%)',
+        url: 'assets/wallpapers/neon-blue.html',
+        preview: 'linear-gradient(180deg, #0a1d30 0%, #12364d 38%, #071611 100%)',
       },
       {
-        name: 'Neon Alley',
+        name: 'Ocean Glow',
         type: 'still',
-        url: 'assets/wallpapers/still-anime-neon-alley.html',
-        preview: 'linear-gradient(180deg, #070b12 0%, #0b121a 100%)',
-      },
-      {
-        name: 'Midnight',
-        type: 'still',
-        url: 'assets/wallpapers/still-midnight.html',
-        preview: 'linear-gradient(160deg, #070b14 0%, #101826 45%, #0a1018 100%)',
-      },
-      {
-        name: 'Moss',
-        type: 'still',
-        url: 'assets/wallpapers/still-moss.html',
-        preview: 'linear-gradient(155deg, #07140e 0%, #0d2418 50%, #06110c 100%)',
-      },
-      {
-        name: 'Ink',
-        type: 'still',
-        url: 'assets/wallpapers/still-ink.html',
-        preview: 'radial-gradient(circle at 50% 40%, #151515 0%, #000 100%)',
-      },
-      {
-        name: 'Ember',
-        type: 'still',
-        url: 'assets/wallpapers/still-ember.html',
-        preview: 'linear-gradient(165deg, #1a0c0a 0%, #2a1410 40%, #120a08 100%)',
-      },
-      {
-        name: 'Slate',
-        type: 'still',
-        url: 'assets/wallpapers/still-slate.html',
-        preview: 'linear-gradient(145deg, #1c2228 0%, #2a333c 40%, #171c22 100%)',
+        url: 'assets/wallpapers/ocean-glow.html',
+        preview: 'linear-gradient(180deg, #031a25 0%, #0a2c39 42%, #061915 100%)',
       },
     ];
 
