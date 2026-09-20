@@ -4,27 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Leaf OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="boot-overlay" id="bootOverlay">
     <div class="boot-content">
+      <div class="boot-mark" aria-hidden="true">
+        <span class="icon icon-leaf"></span>
+      </div>
       <h1 class="boot-title">Leaf OS</h1>
       <div class="boot-spinner"></div>
-      <p class="boot-text" id="bootText">Initializing system...</p>
+      <p class="boot-text" id="bootText">Starting desktop...</p>
     </div>
   </div>
 
   <div class="desktop" id="desktop">
     <div class="wallpaper" id="wallpaper"></div>
-    
+
     <header class="topbar">
       <div class="search-box">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon" aria-hidden="true">
+          <span class="icon icon-search"></span>
+        </span>
         <input type="text" placeholder="Search apps..." />
       </div>
       <div class="topbar-right">
-        <button class="topbar-icon" id="wallpaperBtn" title="Change Wallpaper">🎨</button>
+        <button class="topbar-icon" id="wallpaperBtn" title="Change Wallpaper" aria-label="Change Wallpaper">
+          <span class="icon icon-wallpaper"></span>
+        </button>
         <span class="time" id="topTime">--:--</span>
       </div>
     </header>
@@ -33,24 +43,78 @@
 
     <footer class="dock">
       <div class="dock-content">
-        <button class="dock-icon" data-app="welcome" title="Welcome">✦</button>
-        <button class="dock-icon" data-app="clock" title="Clock">⏰</button>
-        <button class="dock-icon" data-app="calendar" title="Calendar">📅</button>
-        <button class="dock-icon" data-app="notes" title="Notes">📝</button>
+        <button class="dock-icon" data-app="welcome" title="Welcome" aria-label="Welcome">
+          <span class="icon icon-leaf"></span>
+        </button>
+        <button class="dock-icon" data-app="browser" title="Browser" aria-label="Browser">
+          <span class="icon icon-browser"></span>
+        </button>
+        <button class="dock-icon" data-app="clock" title="Clock" aria-label="Clock">
+          <span class="icon icon-clock"></span>
+        </button>
+        <button class="dock-icon" data-app="calendar" title="Calendar" aria-label="Calendar">
+          <span class="icon icon-calendar"></span>
+        </button>
+        <button class="dock-icon" data-app="notes" title="Notes" aria-label="Notes">
+          <span class="icon icon-notes"></span>
+        </button>
         <div class="dock-separator"></div>
-        <button class="dock-icon" data-app="settings" title="Settings">⚙️</button>
+        <button class="dock-icon" data-app="settings" title="Settings" aria-label="Settings">
+          <span class="icon icon-settings"></span>
+        </button>
       </div>
     </footer>
   </div>
 
   <div id="wallpaperModal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Select Wallpaper</h2>
+    <div class="modal-content modal-wallpaper">
+      <div class="modal-header-row">
+        <h2>Change background</h2>
+        <div class="wallpaper-filters">
+          <button type="button" class="filter-chip active" data-wallpaper-filter="all">All</button>
+          <button type="button" class="filter-chip" data-wallpaper-filter="still">Still</button>
+        </div>
+      </div>
       <div class="wallpaper-grid" id="wallpaperGrid"></div>
-      <button class="modal-close" id="modalClose">Close</button>
+      <div class="modal-footer-row">
+        <button class="modal-close" id="modalClose">Done</button>
+      </div>
     </div>
   </div>
 
+  <aside class="music-player" id="musicPlayer" aria-label="Music player">
+    <audio id="musicAudio" preload="none"></audio>
+    <div class="music-mini">
+      <button type="button" class="music-ctrl" id="musicPrevBtn" title="Previous" aria-label="Previous">‹</button>
+      <button type="button" class="music-ctrl music-play" id="musicPlayBtn" title="Play" aria-label="Play">▶</button>
+      <button type="button" class="music-ctrl" id="musicNextBtn" title="Next" aria-label="Next">›</button>
+      <div class="music-now">
+        <div class="music-title" id="musicTitle">Lofi Player</div>
+        <div class="music-status" id="musicStatus">Ready</div>
+      </div>
+      <button type="button" class="music-ctrl music-expand" id="musicExpandBtn" title="Expand" aria-label="Expand">▴</button>
+    </div>
+    <div class="music-panel" id="musicPanel">
+      <form class="music-search-form" onsubmit="return false;">
+        <input type="search" id="musicSearch" class="music-search" placeholder="Search free radio / lofi…" autocomplete="off" />
+      </form>
+      <div class="music-volume-row">
+        <span>Vol</span>
+        <input type="range" id="musicVolume" min="0" max="1" step="0.01" value="0.7" />
+      </div>
+      <div class="music-section-label">Playlist</div>
+      <div class="music-list" id="musicList"></div>
+      <div class="music-section-label">Ambience</div>
+      <div class="music-ambience">
+        <button type="button" class="ambient-chip" data-ambient="rain">Rain</button>
+        <button type="button" class="ambient-chip" data-ambient="crickets">Crickets</button>
+        <button type="button" class="ambient-chip" data-ambient="fire">Fire</button>
+        <button type="button" class="ambient-chip" data-ambient="wind">Wind</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="assets/player/music-player.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
