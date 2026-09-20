@@ -939,8 +939,8 @@ class LeafOS {
 
 // Initialize when DOM is ready
 const leafOS = new LeafOS();
-const leafMusic = new LeafMusicPlayer();
+const leafMusic = typeof LeafMusicPlayer === 'function' ? new LeafMusicPlayer() : null;
 document.addEventListener('DOMContentLoaded', () => {
   leafOS.boot();
-  leafMusic.init();
+  leafMusic?.init();
 });
