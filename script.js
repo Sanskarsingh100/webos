@@ -13,28 +13,28 @@ class LeafOS {
 
     this.wallpapers = [
       {
-        name: 'Leaf Green',
+        name: 'Bloom Glow',
         type: 'still',
         url: this.getAssetUrl('assets/wallpapers/leaf-green.html'),
-        preview: 'linear-gradient(180deg, #0a2f1d 0%, #103c2d 35%, #071a14 100%)',
+        preview: 'radial-gradient(circle at 50% 45%, rgba(114,255,186,0.55), rgba(17,45,37,0.25) 28%, rgba(2,10,8,1) 64%)',
       },
       {
-        name: 'Deep Forest',
+        name: 'Night Orbit',
         type: 'still',
         url: this.getAssetUrl('assets/wallpapers/deep-forest.html'),
-        preview: 'linear-gradient(180deg, #07130d 0%, #0d261b 35%, #040d09 100%)',
+        preview: 'radial-gradient(circle at 50% 42%, rgba(147,210,255,0.4), rgba(10,29,39,0.2) 30%, rgba(3,10,15,1) 62%)',
       },
       {
-        name: 'Neon Blue',
+        name: 'Azure Drift',
         type: 'still',
         url: this.getAssetUrl('assets/wallpapers/neon-blue.html'),
-        preview: 'linear-gradient(180deg, #0a1d30 0%, #12364d 38%, #071611 100%)',
+        preview: 'radial-gradient(circle at 50% 45%, rgba(126,208,255,0.48), rgba(15,53,76,0.25) 30%, rgba(4,16,22,1) 65%)',
       },
       {
-        name: 'Ocean Glow',
+        name: 'Coastal Glow',
         type: 'still',
         url: this.getAssetUrl('assets/wallpapers/ocean-glow.html'),
-        preview: 'linear-gradient(180deg, #031a25 0%, #0a2c39 42%, #061915 100%)',
+        preview: 'radial-gradient(circle at 50% 48%, rgba(145,224,255,0.5), rgba(18,40,54,0.3) 32%, rgba(4,13,22,1) 68%)',
       },
     ];
 
