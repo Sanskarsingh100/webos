@@ -1,0 +1,6 @@
+[
+  { "name": "Google", "host": "google.com", "url": "https://www.google.com", "embedUrl": "https://www.google.com" },
+  { "name": "GitHub", "host": "github.com", "url": "https://github.com", "embedUrl": "https://github.com" },
+  { "name": "MDN", "host": "developer.mozilla.org", "url": "https://developer.mozilla.org", "embedUrl": "https://developer.mozilla.org" },
+  { "name": "Wikipedia", "host": "wikipedia.org", "url": "https://www.wikipedia.org", "embedUrl": "https://www.wikipedia.org" }
+]

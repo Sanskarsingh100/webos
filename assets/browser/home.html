@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaf Browser Home</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06130d;
+      --panel: rgba(19, 38, 30, 0.8);
+      --accent: #5dffaa;
+      --text: #edfdf4;
+      --muted: #a8d8be;
+      --border: rgba(126, 255, 188, 0.22);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, rgba(93,255,170,0.18), transparent 30%), var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", sans-serif;
+    }
+    .card {
+      width: min(760px, 88vw);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 30px 26px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 0.04em;
+      color: var(--accent);
+    }
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Leaf Browser</h1>
+    <p>Use the address bar above to open websites or local pages. This page is stored under the assets folder so it loads correctly in a deployed static environment.</p>
+  </div>
+</body>
+</html>

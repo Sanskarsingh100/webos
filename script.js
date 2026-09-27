@@ -15,31 +15,42 @@ class LeafOS {
       {
         name: 'Leaf Green',
         type: 'still',
-        url: 'assets/wallpapers/leaf-green.html',
+        url: this.getAssetUrl('assets/wallpapers/leaf-green.html'),
         preview: 'linear-gradient(180deg, #0a2f1d 0%, #103c2d 35%, #071a14 100%)',
       },
       {
         name: 'Deep Forest',
         type: 'still',
-        url: 'assets/wallpapers/deep-forest.html',
+        url: this.getAssetUrl('assets/wallpapers/deep-forest.html'),
         preview: 'linear-gradient(180deg, #07130d 0%, #0d261b 35%, #040d09 100%)',
       },
       {
         name: 'Neon Blue',
         type: 'still',
-        url: 'assets/wallpapers/neon-blue.html',
+        url: this.getAssetUrl('assets/wallpapers/neon-blue.html'),
         preview: 'linear-gradient(180deg, #0a1d30 0%, #12364d 38%, #071611 100%)',
       },
       {
         name: 'Ocean Glow',
         type: 'still',
-        url: 'assets/wallpapers/ocean-glow.html',
+        url: this.getAssetUrl('assets/wallpapers/ocean-glow.html'),
         preview: 'linear-gradient(180deg, #031a25 0%, #0a2c39 42%, #061915 100%)',
       },
     ];
 
+    this.themePresets = [
+      { name: 'Leaf', value: '#5dffaa' },
+      { name: 'Sky', value: '#62d0ff' },
+      { name: 'Sunset', value: '#ff9b6b' },
+      { name: 'Violet', value: '#a78bfa' },
+      { name: 'Rose', value: '#ff7ca8' },
+      { name: 'Gold', value: '#f6d365' },
+    ];
+
     this.wallpaperFilter = 'all';
     const savedWallpaper = Number(localStorage.getItem('leafos-wallpaper'));
+    const savedTheme = localStorage.getItem('leafos-theme') || '#5dffaa';
+    this.currentTheme = this.isValidHex(savedTheme) ? savedTheme : '#5dffaa';
     this.currentWallpaperIndex = Number.isInteger(savedWallpaper)
       && savedWallpaper >= 0
       && savedWallpaper < this.wallpapers.length
@@ -49,11 +60,19 @@ class LeafOS {
     this.draggedWindow = null;
     this.dragOffset = { x: 0, y: 0 };
     this.dragListenersBound = false;
-    this.browserHome = 'assets/browser/home.html';
+    this.browserHome = this.getAssetUrl('assets/browser/home.html');
     this.browserHistory = [];
     this.browserHistoryIndex = -1;
     this.browserCurrentUrl = this.browserHome;
     this.browserPins = [];
+  }
+
+  getAssetUrl(path) {
+    try {
+      return new URL(path, window.location.href).toString();
+    } catch (_) {
+      return path;
+    }
   }
 
   getStartupLayout() {
@@ -377,6 +396,69 @@ class LeafOS {
     }
   }
 
+  isValidHex(hex) {
+    return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(String(hex || ''));
+  }
+
+  hexToRgb(hex) {
+    const normalized = hex.replace('#', '');
+    const full = normalized.length === 3
+      ? normalized.split('').map(ch => ch + ch).join('')
+      : normalized;
+
+    const value = Number.parseInt(full, 16);
+    return {
+      r: (value >> 16) & 255,
+      g: (value >> 8) & 255,
+      b: value & 255,
+    };
+  }
+
+  mixColors(base, overlay, amount) {
+    const t = amount || 0;
+    return {
+      r: Math.round(base.r * (1 - t) + overlay.r * t),
+      g: Math.round(base.g * (1 - t) + overlay.g * t),
+      b: Math.round(base.b * (1 - t) + overlay.b * t),
+    };
+  }
+
+  toCssRgb({ r, g, b }) {
+    return `${r}, ${g}, ${b}`;
+  }
+
+  applyTheme(color) {
+    const hex = this.isValidHex(color) ? color : '#5dffaa';
+    this.currentTheme = hex;
+    localStorage.setItem('leafos-theme', hex);
+
+    const accent = this.hexToRgb(hex);
+    const accent2 = this.mixColors(accent, { r: 255, g: 255, b: 255 }, 0.35);
+    const darkBase = { r: 2, g: 10, b: 6 };
+    const panelBase = { r: 4, g: 28, b: 16 };
+    const mutedBase = { r: 182, g: 214, b: 197 };
+    const border = this.mixColors(accent, { r: 255, g: 255, b: 255 }, 0.4);
+
+    const root = document.documentElement;
+    root.style.setProperty('--bg', this.toCssRgb(this.mixColors(darkBase, accent, 0.12)));
+    root.style.setProperty('--panel', `rgba(${this.toCssRgb(this.mixColors(panelBase, accent, 0.32))}, 0.9)`);
+    root.style.setProperty('--border', `rgba(${this.toCssRgb(border)}, 0.38)`);
+    root.style.setProperty('--text', '#f3fff7');
+    root.style.setProperty('--muted', `rgb(${this.toCssRgb(this.mixColors(mutedBase, accent, 0.4))})`);
+    root.style.setProperty('--accent', hex);
+    root.style.setProperty('--accent-2', `rgb(${this.toCssRgb(accent2)})`);
+    root.style.setProperty('--dark', `rgb(${this.toCssRgb(this.mixColors(darkBase, accent, 0.15))})`);
+    root.style.setProperty('--neon-glow', `0 0 18px rgba(${this.toCssRgb(accent)}, 0.35)`);
+
+    const customInput = document.getElementById('themeColorInput');
+    if (customInput) customInput.value = hex;
+
+    document.querySelectorAll('.theme-swatch').forEach((swatch) => {
+      const isActive = swatch.dataset.themeColor?.toLowerCase() === hex.toLowerCase();
+      swatch.classList.toggle('active', isActive);
+    });
+  }
+
   setWallpaper(index) {
     if (index < 0 || index >= this.wallpapers.length) return;
 
@@ -583,7 +665,7 @@ class LeafOS {
     if (!pinsEl) return;
 
     try {
-      const res = await fetch('assets/browser/pins.json');
+      const res = await fetch(this.getAssetUrl('assets/browser/pins.json'));
       const pins = await res.json();
       this.browserPins = pins;
       pinsEl.innerHTML = '';
@@ -772,15 +854,37 @@ class LeafOS {
 
     this.createWindow('windowSettings', 'Settings', `
       <div class="app-settings">
-        <h3>Background</h3>
-        <p>Current: <span id="currentWallpaperLabel">—</span></p>
-        <div class="settings-wallpaper-actions">
-          <button type="button" class="btn-secondary" id="prevWallpaper">Previous</button>
-          <button type="button" class="btn-secondary" id="nextWallpaper">Next</button>
-          <button type="button" class="btn-primary" id="changeWallpaper">Browse all</button>
+        <div class="settings-block">
+          <h3>Theme</h3>
+          <div class="theme-picker-row">
+            <label class="theme-picker-label" for="themeColorInput">Accent color</label>
+            <input id="themeColorInput" type="color" value="${this.currentTheme}" aria-label="Theme color" />
+          </div>
+          <div class="theme-swatches" aria-label="Theme presets">
+            ${this.themePresets.map((theme) => `
+              <button
+                type="button"
+                class="theme-swatch${theme.value.toLowerCase() === this.currentTheme.toLowerCase() ? ' active' : ''}"
+                data-theme-color="${theme.value}"
+                style="--theme-color: ${theme.value};"
+                title="${theme.name}"
+                aria-label="${theme.name} theme"
+              ></button>
+            `).join('')}
+          </div>
         </div>
-        <div class="settings-section-label">Quick pick</div>
-        <div class="wallpaper-grid wallpaper-grid-compact" id="settingsWallpaperGrid"></div>
+
+        <div class="settings-block">
+          <h3>Background</h3>
+          <p>Current: <span id="currentWallpaperLabel">—</span></p>
+          <div class="settings-wallpaper-actions">
+            <button type="button" class="btn-secondary" id="prevWallpaper">Previous</button>
+            <button type="button" class="btn-secondary" id="nextWallpaper">Next</button>
+            <button type="button" class="btn-primary" id="changeWallpaper">Browse all</button>
+          </div>
+          <div class="settings-section-label">Quick pick</div>
+          <div class="wallpaper-grid wallpaper-grid-compact" id="settingsWallpaperGrid"></div>
+        </div>
       </div>
     `, {
       position: { x: 120, y: 100 },
@@ -853,6 +957,19 @@ class LeafOS {
     });
 
     this.renderWallpaperGrid(document.getElementById('settingsWallpaperGrid'), 'all');
+
+    const themeInput = document.getElementById('themeColorInput');
+    if (themeInput) {
+      themeInput.addEventListener('input', (event) => {
+        this.applyTheme(event.target.value);
+      });
+    }
+
+    document.querySelectorAll('.theme-swatch').forEach((swatch) => {
+      swatch.addEventListener('click', () => this.applyTheme(swatch.dataset.themeColor));
+    });
+
+    this.applyTheme(this.currentTheme);
 
     // Initialize wallpaper
     this.setWallpaper(this.currentWallpaperIndex);
