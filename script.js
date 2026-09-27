@@ -94,6 +94,7 @@ class LeafOS {
     const clockX = Math.max(16, welcomeX - sideW - gap);
     const calendarX = Math.min(vw - sideW - 16, welcomeX + welcomeW + gap);
     const sideY = Math.round(topOffset + Math.max(16, (areaH - sideH) / 2));
+    const gameY = sideY + sideH + 24;
 
     const canFitSides = vw >= 1040;
 
@@ -102,6 +103,7 @@ class LeafOS {
       welcome: { x: welcomeX, y: welcomeY, width: `${welcomeW}px` },
       clock: { x: clockX, y: sideY, width: `${sideW}px` },
       calendar: { x: calendarX, y: sideY, width: `${sideW}px` },
+      game: { x: clockX, y: gameY, width: `${sideW}px` },
     };
   }
 
@@ -757,6 +759,216 @@ class LeafOS {
     this.renderBrowserPins();
   }
 
+  setupGameApp() {
+    const canvas = document.getElementById('gameCanvas');
+    const restartBtn = document.getElementById('gameRestartBtn');
+    const scoreEl = document.getElementById('gameScore');
+    if (!canvas || !restartBtn || !scoreEl) return;
+
+    const ctx = canvas.getContext('2d');
+    const groundY = canvas.height - 22;
+    let gameRunning = true;
+    let score = 0;
+    let speed = 4;
+    let lastTime = 0;
+    let spawnTimer = 0;
+
+    const dino = {
+      x: 52,
+      y: groundY - 28,
+      width: 24,
+      height: 28,
+      velocityY: 0,
+    };
+
+    const clouds = [
+      { x: 30, y: 30, w: 28, h: 12 },
+      { x: 120, y: 42, w: 22, h: 10 },
+      { x: 210, y: 24, w: 30, h: 12 },
+    ];
+
+    const obstacles = [];
+
+    const drawCloud = (cloud) => {
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath();
+      ctx.arc(cloud.x, cloud.y + cloud.h, cloud.w * 0.35, 0, Math.PI * 2);
+      ctx.arc(cloud.x + cloud.w * 0.28, cloud.y + cloud.h * 0.2, cloud.w * 0.28, 0, Math.PI * 2);
+      ctx.arc(cloud.x + cloud.w * 0.58, cloud.y + cloud.h, cloud.w * 0.32, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    const drawDino = () => {
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#5dffaa';
+      const bodyX = dino.x;
+      const bodyY = dino.y;
+
+      ctx.fillStyle = accent;
+      ctx.fillRect(bodyX + 5, bodyY + 6, 14, 18);
+      ctx.fillRect(bodyX + 3, bodyY + 10, 4, 8);
+      ctx.fillRect(bodyX + 18, bodyY + 12, 4, 6);
+      ctx.fillRect(bodyX + 10, bodyY + 2, 8, 6);
+      ctx.fillStyle = '#dfffee';
+      ctx.fillRect(bodyX + 9, bodyY + 4, 2, 2);
+      ctx.fillRect(bodyX + 14, bodyY + 4, 2, 2);
+      ctx.fillStyle = '#091912';
+      ctx.fillRect(bodyX + 11, bodyY + 9, 2, 2);
+      ctx.fillRect(bodyX + 16, bodyY + 9, 2, 2);
+
+      ctx.fillStyle = '#b9ffd3';
+      ctx.fillRect(bodyX + 1, bodyY + 18, 6, 6);
+      ctx.fillRect(bodyX + 18, bodyY + 18, 6, 6);
+
+      if (dino.velocityY !== 0) {
+        ctx.fillStyle = accent;
+        ctx.fillRect(bodyX + 18, bodyY + 20, 6, 2);
+      }
+    };
+
+    const drawCactus = (obstacle) => {
+      ctx.fillStyle = '#9af0b4';
+      ctx.fillRect(obstacle.x, obstacle.y, obstacle.width * 0.38, obstacle.height);
+      ctx.fillRect(obstacle.x + obstacle.width * 0.3, obstacle.y + 12, obstacle.width * 0.45, obstacle.height - 12);
+      ctx.fillRect(obstacle.x + obstacle.width * 0.12, obstacle.y + obstacle.height * 0.5, obstacle.width * 0.2, obstacle.height * 0.35);
+      ctx.fillStyle = '#dfffee';
+      ctx.fillRect(obstacle.x + obstacle.width * 0.2, obstacle.y + 18, 3, 3);
+      ctx.fillRect(obstacle.x + obstacle.width * 0.5, obstacle.y + 22, 3, 3);
+    };
+
+    const resetGame = () => {
+      score = 0;
+      speed = 4;
+      spawnTimer = 0;
+      dino.y = groundY - dino.height;
+      dino.velocityY = 0;
+      obstacles.length = 0;
+      scoreEl.textContent = '0';
+      gameRunning = true;
+    };
+
+    const jump = () => {
+      if (dino.y >= groundY - dino.height && gameRunning) {
+        dino.velocityY = -9.2;
+      }
+    };
+
+    const endGame = () => {
+      gameRunning = false;
+      ctx.fillStyle = 'rgba(8, 17, 14, 0.55)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#f4fff8';
+      ctx.font = 'bold 18px IBM Plex Sans, sans-serif';
+      ctx.fillText('Game Over', 90, 78);
+      ctx.font = '14px IBM Plex Sans, sans-serif';
+      ctx.fillText('Press Space to restart', 72, 102);
+    };
+
+    const update = (delta) => {
+      if (!gameRunning) return;
+
+      score += delta * 0.018;
+      speed += delta * 0.00012;
+      scoreEl.textContent = String(Math.floor(score));
+
+      dino.velocityY += 0.52;
+      dino.y += dino.velocityY;
+
+      if (dino.y >= groundY - dino.height) {
+        dino.y = groundY - dino.height;
+        dino.velocityY = 0;
+      }
+
+      spawnTimer += delta;
+      if (spawnTimer > Math.max(900, 1500 - speed * 25)) {
+        const height = 18 + Math.random() * 34;
+        obstacles.push({
+          x: canvas.width + 20,
+          y: groundY - height,
+          width: 14 + Math.random() * 12,
+          height,
+        });
+        spawnTimer = 0;
+      }
+
+      for (let i = obstacles.length - 1; i >= 0; i -= 1) {
+        const obstacle = obstacles[i];
+        obstacle.x -= speed;
+
+        const hitX = obstacle.x < dino.x + dino.width && obstacle.x + obstacle.width > dino.x;
+        const hitY = dino.y + dino.height > obstacle.y && dino.y < obstacle.y + obstacle.height;
+        if (hitX && hitY) {
+          endGame();
+          return;
+        }
+
+        if (obstacle.x + obstacle.width < 0) {
+          obstacles.splice(i, 1);
+        }
+      }
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      sky.addColorStop(0, 'rgba(146, 205, 255, 0.16)');
+      sky.addColorStop(1, 'rgba(255,255,255,0.02)');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      clouds.forEach((cloud) => {
+        cloud.x -= 0.2;
+        if (cloud.x < -40) cloud.x = canvas.width + 10;
+        drawCloud(cloud);
+      });
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, groundY + 1);
+      ctx.lineTo(canvas.width, groundY + 1);
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      for (let i = 0; i < canvas.width; i += 16) {
+        ctx.fillRect(i, groundY + 8, 10, 2);
+      }
+
+      drawDino();
+      obstacles.forEach(drawCactus);
+    };
+
+    const frame = (timestamp) => {
+      const delta = timestamp - lastTime || 16;
+      lastTime = timestamp;
+      update(delta);
+      draw();
+      requestAnimationFrame(frame);
+    };
+
+    const handleInput = (event) => {
+      if (event.code === 'Space' || event.code === 'ArrowUp') {
+        event.preventDefault();
+        if (!gameRunning) {
+          resetGame();
+        }
+        jump();
+      }
+    };
+
+    restartBtn.addEventListener('click', resetGame);
+    document.addEventListener('keydown', handleInput);
+    canvas.addEventListener('pointerdown', () => {
+      if (!gameRunning) {
+        resetGame();
+      }
+      jump();
+    });
+
+    resetGame();
+    requestAnimationFrame(frame);
+  }
+
   init() {
     const layout = this.getStartupLayout();
 
@@ -796,6 +1008,20 @@ class LeafOS {
       position: layout.calendar,
       width: layout.calendar.width,
       hidden: !layout.canFitSides,
+    });
+
+    this.createWindow('windowGame', 'Dino Game', `
+      <div class="app-game">
+        <div class="game-header">
+          <span>Score: <strong id="gameScore">0</strong></span>
+          <button type="button" class="btn-secondary game-btn" id="gameRestartBtn">Restart</button>
+        </div>
+        <canvas id="gameCanvas" width="300" height="180" aria-label="Dino game"></canvas>
+      </div>
+    `, {
+      position: layout.game,
+      width: layout.game.width,
+      hidden: true,
     });
 
     this.createWindow('windowNotes', 'Notes', `
@@ -894,6 +1120,7 @@ class LeafOS {
     });
 
     this.setupBrowserApp();
+    this.setupGameApp();
 
     // Close modal button
     const modalClose = document.getElementById('modalClose');
@@ -919,6 +1146,7 @@ class LeafOS {
           clock: 'windowClock',
           calendar: 'windowCalendar',
           notes: 'windowNotes',
+          game: 'windowGame',
           settings: 'windowSettings',
         };
         const windowId = appMap[btn.dataset.app];
@@ -988,12 +1216,13 @@ class LeafOS {
     // Keep startup trio aligned if the browser is resized before the user moves them
     window.addEventListener('resize', () => {
       const next = this.getStartupLayout();
-      const keepLayout = ['windowWelcome', 'windowClock', 'windowCalendar'];
+      const keepLayout = ['windowWelcome', 'windowClock', 'windowCalendar', 'windowGame'];
 
       const positions = {
         windowWelcome: next.welcome,
         windowClock: next.clock,
         windowCalendar: next.calendar,
+        windowGame: next.game,
       };
 
       keepLayout.forEach((id) => {
