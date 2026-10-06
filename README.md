@@ -35,12 +35,6 @@ HTML handles the desktop layout, dock, wallpaper modal, and app windows. CSS is 
 
 Most of the behavior is driven by a core `LeafOS` class that sets up the desktop, manages windows, loads apps, and handles state updates.
 
-## Use it
-
-Open `index.html` in a browser and the desktop should load right away.
-
-This is a static project, so it works well for GitHub Pages or any other simple hosting setup.
-
 ## License
 
 This project is open for personal and educational use.
