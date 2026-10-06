@@ -1,45 +1,57 @@
 # Leaf OS
 
-A tiny desktop-style web app built with plain HTML, CSS, and JavaScript. It feels like a mini operating system, with a floating window layout, dock, wallpaper switching, browser, notes, settings, clock, and a simple dinosaur game.
+A small desktop-style web app that feels like a mini operating system. It has a dock, floating windows, wallpaper switching, a browser, notes, settings, a clock, and a little dinosaur game.
+
+This was built with plain HTML, CSS, and JavaScript. No backend, no framework, just a browser app that tries to feel like a real desktop.
 
 Live demo: https://sanskarsingh100.github.io/webos/
 
-This project is basically a browser-based desktop environment made without a framework. Just a few files, a little JS, and a lot of UI behavior. The goal was to make something lightweight and fun that feels like a desktop app without needing a backend or heavy setup.
+## What this project does
 
-## What’s inside
-
-- desktop shell with a top bar and dock
-- draggable windows with minimize, maximize, and close controls
-- live clock and calendar
-- wallpaper picker and theme switching
+- desktop shell with a top bar and app dock
+- windows you can drag around and resize
+- minimize, maximize, and close buttons
+- wallpaper and theme switching
 - built-in browser with pinned shortcuts
-- notes app for quick text capture
-- small dinosaur game
-- settings panel for customization
-- browser storage for theme and wallpaper preferences
+- notes app for quick writing
+- settings panel
+- tiny side-scrolling dinosaur game
+- saved preferences using browser storage
+
+## How it works
+
+The app is built as a single-page front-end project.
+
+- HTML sets up the desktop and app windows
+- CSS handles the styling, layout, and theme look
+- JavaScript controls the app behavior, window logic, theme switching, and browser/game interactions
+
+The main logic is split across the desktop shell and a few asset files in the `assets/` folder.
 
 ## Project structure
 
 - `index.html` — main desktop layout
-- `style.css` — styling and UI look
-- `script.js` — desktop logic, app behavior, theming, and window controls
-- `assets/` — wallpapers, browser assets, and music player files
-- `assets/player/music-player.js` — audio player logic
-- `assets/browser/home.html` and `pins.json` — browser start page and quick links
+- `style.css` — look and layout
+- `script.js` — desktop behavior and app logic
+- `assets/` — wallpapers, browser resources, and music player files
+- `assets/player/music-player.js` — music player behavior
+- `assets/browser/home.html` and `pins.json` — browser start page and shortcuts
 
-## How it works
+## Run it
 
-The app is built as a small front-end system.
+Open `index.html` in a browser.
 
-HTML handles the desktop layout, dock, wallpaper modal, and app windows. CSS is responsible for the glassy look, responsive layout, and theme colors. JavaScript manages window stacking, dragging, maximizing, the clock, theme changes, and the browser/game interactions.
+This is a static project, so it works well for GitHub Pages or any simple static hosting setup.
 
-Most of the behavior is driven by a core `LeafOS` class that sets up the desktop, manages windows, loads apps, and handles state updates.
+## Why I built it
+
+I wanted to make a tiny desktop interface in the browser and see how much personality you can get out of vanilla web tech. It turns out a lot.
+
+## Ship it
+
+This project is ready to be pushed to GitHub Pages or any static host. It is lightweight, easy to customize, and easy to keep building on.
 
 ## License
 
-This project is open for personal and educational use.
-
----
-
-If you want to try the live version, check it out here: https://sanskarsingh100.github.io/webos/
+Open for personal and educational use.
 
