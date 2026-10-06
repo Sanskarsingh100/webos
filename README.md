@@ -37,19 +37,9 @@ The main logic is split across the desktop shell and a few asset files in the `a
 - `assets/player/music-player.js` — music player behavior
 - `assets/browser/home.html` and `pins.json` — browser start page and shortcuts
 
-## Run it
-
-Open `index.html` in a browser.
-
-This is a static project, so it works well for GitHub Pages or any simple static hosting setup.
-
 ## Why I built it
 
 I wanted to make a tiny desktop interface in the browser and see how much personality you can get out of vanilla web tech. It turns out a lot.
-
-## Ship it
-
-This project is ready to be pushed to GitHub Pages or any static host. It is lightweight, easy to customize, and easy to keep building on.
 
 ## License
 
